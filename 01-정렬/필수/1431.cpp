@@ -1,47 +1,52 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
-#include <cctype>
-
+#include <string>
 using namespace std;
 
-// 숫자 합을 구하는 함수
-int sum_of_digits(const string& s) {
-    int sum = 0;
-    for (char c : s) {
-        if (isdigit(c)) {
-            sum += c - '0';
+int compare(string a, string b) {
+    int len1 = a.size();
+    int len2 = b.size();
+    int sum1 = 0;
+    int sum2 = 0;
+
+    // 1. 문자열 길이가 다르면, 짧은 것이 먼저 오도록 정렬
+    if (len1 != len2) {
+        return len1 < len2;
+    }
+
+    // 2. 길이가 같다면, 숫자의 합이 작은 것이 먼저 오도록 정렬
+    for (int i = 0; i < a.size(); i++) {
+        // 문자열 a 내 숫자의 합 계산
+        if (a[i] >= '0' && a[i] <= '9') {
+            sum1 += int(a[i]) - '0';
+        }
+        // 문자열 b 내 숫자의 합 계산
+        if (b[i] >= '0' && b[i] <= '9') {
+            sum2 += int(b[i]) - '0';
         }
     }
-    return sum;
-}
 
-// 정렬 기준 정의
-bool compare(const string& a, const string& b) {
-    if (a.length() != b.length()) {
-        return a.length() < b.length(); // 1. 길이가 짧은 것이 먼저
+    if (sum1 != sum2) {
+        return sum1 < sum2;
     }
-    int sumA = sum_of_digits(a);
-    int sumB = sum_of_digits(b);
-    if (sumA != sumB) {
-        return sumA < sumB; // 2. 숫자의 합이 작은 것이 먼저
-    }
-    return a < b; // 3. 사전순 비교 (알파벳이 숫자보다 크므로 정상 동작)
+
+    // 3. 앞의 기준으로 비교할 수 없다면, 사전순으로 정렬
+    return a < b;
 }
 
 int main() {
-    int N;
-    cin >> N;
-    vector<string> serials(N);
-    
-    for (int i = 0; i < N; i++) {
-        cin >> serials[i];
+    int count;
+    string serialNumbers[50];
+
+    cin >> count;
+    for (int i = 0; i < count; i++) {
+        cin >> serialNumbers[i];
     }
-    
-    sort(serials.begin(), serials.end(), compare);
-    
-    for (const string& s : serials) {
-        cout << s << "\n";
+
+    // 비교 함수 compare에 따라 정렬
+    sort(serialNumbers, serialNumbers + count, compare);
+    for (int i = 0; i < count; i++) {
+        cout << serialNumbers[i] << "\n";
     }
     
     return 0;
